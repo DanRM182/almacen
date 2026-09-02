@@ -43,7 +43,7 @@ public class ProductoController {
 
     @GetMapping("/{id}")
     @Operation(
-            summary = "Listar productos",
+            summary = "Obtener producto por ID",
             tags = {"Productos - Consultas"}
     )
 

@@ -18,15 +18,21 @@ public class Sucursal {
     @Column(name = "ID_SUCURSAL")
     private Long id;
 
-    @Column(name = "NOMBRE", length = 50, nullable = false)
+    @Column(nullable = false, name = "NOMBRE", length = 50, unique = true)
     private String nombre;
 
-    @Column(name = "DESCRIPCION", length = 150, nullable = false)
-    private String descripcion;
+    @Column(nullable = false, name = "DIRECCION", length = 150)
+    private String direccion;
 
-    public void validarDatos(String nombre, String descripcion) {
+    public void validarDatos(String nombre, String direccion) {
         StringCustomUtils.validarTamanio(nombre, 5, 50, "El nombre debe tener entre 5 y 50 caracteres");
-        StringCustomUtils.validarTamanio(descripcion, 5, 150, "La descripción debe tener entre 5 y 150 caracteres");
+        StringCustomUtils.validarTamanio(direccion, 10, 150, "La dirección debe tener entre 5 y 150 caracteres");
 
+    }
+
+    public void actualizar(String nombre, String direccion) {
+        validarDatos(nombre,direccion);
+        this.nombre = nombre;
+        this.direccion = direccion;
     }
 }

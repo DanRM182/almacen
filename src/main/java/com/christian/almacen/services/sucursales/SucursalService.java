@@ -6,13 +6,13 @@ import com.christian.almacen.dto.sucursales.SucursalResponse;
 import java.util.List;
 
 public interface SucursalService {
-    List<SucursalResponse> listar(String nombre, String descripcion);
+    List<SucursalResponse> listar();
 
     SucursalResponse obtenerPorId(Long id);
 
     SucursalResponse registrar(SucursalRequest request);
 
-    SucursalResponse actualizar(SucursalRequest request);
+    SucursalResponse actualizar(SucursalRequest request, Long id);
 
     void eliminar(Long id);
 }
