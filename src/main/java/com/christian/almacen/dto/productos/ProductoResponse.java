@@ -1,0 +1,23 @@
+package com.christian.almacen.dto.productos;
+
+import io.swagger.v3.oas.annotations.media.Schema;
+
+import java.math.BigDecimal;
+
+public record ProductoResponse(
+        @Schema(description = "Identificador de un producto",example = "1")
+        Long id,
+
+        @Schema(description = "Nombre del producto", example = "Laptop Gamer")
+        String nombre,
+
+        @Schema(description = "Categoría del producto", example = "Electrónica")
+        String categoria,
+
+        @Schema(description = "Precio del producto", example = "15999.99")
+        BigDecimal precio,
+
+        @Schema(description = "Cantidad disponible del producto", example = "300")
+        Integer cantidad
+) {
+}
