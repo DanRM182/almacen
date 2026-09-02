@@ -39,7 +39,6 @@ public class ProductoServiceImpl implements ProductoService {
 
     @Override
     public ProductoResponse registrar(ProductoRequest request) {
-
         log.info("Registrando nuevo producto...");
         Categoria categoria = null;
         Producto producto = productoMapper.requestAEntidad(request,

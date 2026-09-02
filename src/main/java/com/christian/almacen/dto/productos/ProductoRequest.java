@@ -8,6 +8,7 @@ import jakarta.validation.constraints.Size;
 
 import java.math.BigDecimal;
 
+@Schema(description = "Información de un producto")
 public record ProductoRequest(
         @NotBlank(message = "El nombre es requerido")
         @Size(min = 5, max = 30, message = "EL nombre debe tener entre 5 y 30 caracteres")
@@ -15,7 +16,7 @@ public record ProductoRequest(
         String nombre,
 
         @Schema(description = "Categoría del producto", example = "Electrónica")
-        @NotNull(message = "La categoria es requerida")
+        @NotBlank(message = "La categoria es requerida")
         String categoria,
 
         @Schema(description = "Precio del producto", example = "15999.99")

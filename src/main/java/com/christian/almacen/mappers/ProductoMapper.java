@@ -12,8 +12,8 @@ public class ProductoMapper {
         if(request == null) return null;
 
         return Producto.builder()
-                .nombre(request.nombre())
-                .categoria(null)
+                .nombre(request.nombre().trim())
+                .categoria(categoria)
                 .precio(request.precio())
                 .cantidad(request.cantidad())
                 .build();
