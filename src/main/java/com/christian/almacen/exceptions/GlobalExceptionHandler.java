@@ -79,4 +79,12 @@ public class GlobalExceptionHandler {
                 .body(new CustomErrorResponse(HttpStatus.INTERNAL_SERVER_ERROR.value(),
                         "Error interno del servidor. Por favor, contacte al administrador."));
     }
+
+    @ExceptionHandler(RangoPrecioInvalidoException.class)
+    public ResponseEntity<CustomErrorResponse> handleRangoPrecioInvalidoException(RangoPrecioInvalidoException e) {
+        log.error("Error con los atributos de búsqueda de precio: {}", e.getMessage());
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                .body(new CustomErrorResponse(HttpStatus.BAD_REQUEST.value(),
+                        e.getMessage()));
+    }
 }

@@ -4,6 +4,7 @@ import com.christian.almacen.dto.productos.ProductoRequest;
 import com.christian.almacen.dto.productos.ProductoResponse;
 import com.christian.almacen.entities.Producto;
 import com.christian.almacen.enums.Categoria;
+import com.christian.almacen.exceptions.RangoPrecioInvalidoException;
 import com.christian.almacen.exceptions.RecursoNoEncontradoException;
 import com.christian.almacen.mappers.ProductoMapper;
 import com.christian.almacen.repositories.ProductoRepository;
@@ -14,6 +15,8 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 import java.util.List;
+import java.util.Optional;
+import java.util.function.Function;
 
 @Service
 @AllArgsConstructor
@@ -26,15 +29,20 @@ public class ProductoServiceImpl implements ProductoService {
     @Override
     @Transactional(readOnly = true)
     public List<ProductoResponse> listar(String nombre, String categoria, BigDecimal precioMin, BigDecimal precioMax) {
-        log.info("Listando todos los productos");
+        validarRangoOException(precioMin, precioMax);
 
-        return productoRepository.findAll().stream()
-                .map(productoMapper::entidadAResponse).toList();
+        log.info("Listando todos los productos que cumplen con el criterio de búsqueda");
+
+        return productoRepository.buscarPorNombrePorCategoriaPorRangoDePrecio(
+                        validarDato(nombre, str -> str.trim(), null),
+                        validarDato(categoria, Categoria::obtenerCategoriaPorDescripcion, null),
+                        precioMin, precioMax)
+                .stream().map(productoMapper::entidadAResponse).toList();
     }
 
     @Override
     public ProductoResponse obtenerPorId(Long id) {
-        return  productoMapper.entidadAResponse(obtenerProductoOException(id));
+        return productoMapper.entidadAResponse(obtenerProductoOException(id));
     }
 
     @Override
@@ -86,5 +94,19 @@ public class ProductoServiceImpl implements ProductoService {
         return productoRepository.findById(id).orElseThrow(
                 () -> new RecursoNoEncontradoException(
                         "Producto no encontrado con id: " + id));
+    }
+
+    private void validarRangoOException(BigDecimal precioMin, BigDecimal precioMax) {
+        if (precioMin != null && precioMax != null) {
+            if (precioMax.compareTo(precioMin) <= 0)
+                throw new RangoPrecioInvalidoException("El precio máximo " + precioMax + " debe ser mayor al precio mínimo " + precioMin);
+        }
+    }
+
+    public static <T> T validarDato(String input, Function<String, T> transformacion, T valorPorDefecto) {
+        return Optional.ofNullable(input)
+                .filter(str -> !str.isBlank())
+                .map(transformacion)
+                .orElse(valorPorDefecto);
     }
 }

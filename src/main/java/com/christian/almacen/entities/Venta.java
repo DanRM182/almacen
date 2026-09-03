@@ -12,7 +12,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Entity
-@Table(name = "VENTA")
+@Table(name = "VENTAS")
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
@@ -24,6 +24,7 @@ public class Venta {
     private Long id;
 
     @Column(name = "ESTADO", nullable = false)
+    @Enumerated(EnumType.STRING)
     private EstadoVenta estadoVenta;
 
     @Column(name = "FECHA", nullable = false)
