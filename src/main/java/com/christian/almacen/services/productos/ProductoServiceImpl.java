@@ -78,7 +78,6 @@ public class ProductoServiceImpl implements ProductoService {
         return productoMapper.entidadAResponse(producto);
     }
 
-
     @Override
     public void eliminar(Long id) {
         Producto producto = obtenerProductoOException(id);

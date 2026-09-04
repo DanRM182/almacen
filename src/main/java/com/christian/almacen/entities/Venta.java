@@ -7,6 +7,7 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
@@ -47,6 +48,11 @@ public class Venta {
 
         this.detalleVentas.add(detalleVenta);
         detalleVenta.asignarVenta(this);
+    }
+
+    public BigDecimal totalVenta(List<DetalleVenta> detalleVenta) {
+        return detalleVenta.stream().map(detalle -> detalle.getPrecioProducto().multiply(BigDecimal.valueOf(detalle.getCantidadProducto())))
+                .reduce(BigDecimal.ZERO, BigDecimal::add);
     }
 
     public void cancelar() {
