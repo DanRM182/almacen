@@ -1,5 +1,6 @@
 package com.christian.almacen.controllers;
 
+import com.christian.almacen.dto.reporteVentasSucursal.ReporteVentasSucursalResponse;
 import com.christian.almacen.dto.ventas.VentaRequest;
 import com.christian.almacen.dto.ventas.VentaResponse;
 import com.christian.almacen.services.ventas.VentaService;
@@ -30,6 +31,11 @@ public class VentaController {
     @GetMapping("/canceladas")
     @Operation(summary = "Listar ventas canceladas", tags = {"Ventas - Consultas"})
     public ResponseEntity<List<VentaResponse>> listarCanceladas() { return ResponseEntity.ok(ventaService.listarCanceladas());}
+
+    @GetMapping("/reporteVentas")
+    @Operation(summary = "Listar ventas registradas por sucursal", tags = {"Ventas - Consultas"})
+    public ResponseEntity<List<ReporteVentasSucursalResponse>> generarReporteVentasGeneral() {
+        return ResponseEntity.ok(ventaService.generarReporteVentasGeneral());}
 
     @GetMapping("/{id}")
     @Operation(summary = "Buscar venta registrada", tags = {"Ventas - Consultas"})

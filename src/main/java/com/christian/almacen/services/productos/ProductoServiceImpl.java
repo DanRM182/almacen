@@ -4,6 +4,7 @@ import com.christian.almacen.dto.productos.ProductoRequest;
 import com.christian.almacen.dto.productos.ProductoResponse;
 import com.christian.almacen.entities.Producto;
 import com.christian.almacen.enums.Categoria;
+import com.christian.almacen.exceptions.BusquedaSinParametrosException;
 import com.christian.almacen.exceptions.RangoPrecioInvalidoException;
 import com.christian.almacen.exceptions.RecursoNoEncontradoException;
 import com.christian.almacen.mappers.ProductoMapper;
@@ -29,6 +30,7 @@ public class ProductoServiceImpl implements ProductoService {
     @Override
     @Transactional(readOnly = true)
     public List<ProductoResponse> listar(String nombre, String categoria, BigDecimal precioMin, BigDecimal precioMax) {
+        validarDatosBusqueda(nombre, categoria, precioMin, precioMax);
         validarRangoOException(precioMin, precioMax);
 
         log.info("Listando todos los productos que cumplen con el criterio de búsqueda");
@@ -93,6 +95,11 @@ public class ProductoServiceImpl implements ProductoService {
         return productoRepository.findById(id).orElseThrow(
                 () -> new RecursoNoEncontradoException(
                         "Producto no encontrado con id: " + id));
+    }
+
+    private void validarDatosBusqueda(String nombre, String categoria, BigDecimal precioMin, BigDecimal precioMax) {
+        if(nombre == null && categoria == null && precioMin == null && precioMax == null)
+            throw new BusquedaSinParametrosException("Sin parámetros de búsqueda");
     }
 
     private void validarRangoOException(BigDecimal precioMin, BigDecimal precioMax) {
