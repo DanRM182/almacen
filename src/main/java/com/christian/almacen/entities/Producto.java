@@ -46,11 +46,9 @@ public class Producto {
         ValoresNumericosUtils.validarEnteroPositivo(cantidad, "La cantidad debe ser positiva");
 
         if (cantidad > this.cantidad)
-            throw new IllegalArgumentException("La cantidad debe ser menor o igual a la cantidad actual");
+            throw new IllegalArgumentException("La cantidad de productos debe ser menor o igual a la cantidad actual");
 
         this.cantidad -= cantidad;
-
-        this.cantidad += cantidad;
     }
 
     public void validarDatos(String nombre, Categoria categoria, BigDecimal precio, Integer cantidad) {

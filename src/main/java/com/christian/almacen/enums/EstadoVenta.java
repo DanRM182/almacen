@@ -38,4 +38,8 @@ public enum EstadoVenta {
 
         throw new RecursoNoEncontradoException("No existe un estado de venta con el código: " + codigo);
     }
+
+    public boolean esCancelada() {
+        return this == CANCELADA;
+    }
 }

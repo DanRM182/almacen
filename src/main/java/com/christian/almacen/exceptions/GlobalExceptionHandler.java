@@ -5,6 +5,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.hibernate.exception.ConstraintViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
@@ -72,19 +73,27 @@ public class GlobalExceptionHandler {
                 .body(new CustomErrorResponse(HttpStatus.NOT_FOUND.value(), e.getMessage()));
     }
 
-    @ExceptionHandler(Exception.class)
-    public ResponseEntity<CustomErrorResponse> handleGeneralException(Exception e) {
-        log.error("Error interno del servidor: {}", e.getMessage(), e);
-        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                .body(new CustomErrorResponse(HttpStatus.INTERNAL_SERVER_ERROR.value(),
-                        "Error interno del servidor. Por favor, contacte al administrador."));
-    }
-
     @ExceptionHandler(RangoPrecioInvalidoException.class)
     public ResponseEntity<CustomErrorResponse> handleRangoPrecioInvalidoException(RangoPrecioInvalidoException e) {
         log.error("Error con los atributos de búsqueda de precio: {}", e.getMessage());
         return ResponseEntity.status(HttpStatus.BAD_REQUEST)
                 .body(new CustomErrorResponse(HttpStatus.BAD_REQUEST.value(),
                         e.getMessage()));
+    }
+
+    @ExceptionHandler(VentaNoEncontradaONoActivaException.class)
+    public ResponseEntity<CustomErrorResponse> handleVentaNoEncontradaONoActivaException(VentaNoEncontradaONoActivaException e) {
+        log.error("Error, la venta no está activa o no existe: {}", e.getMessage());
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                .body(new CustomErrorResponse(HttpStatus.BAD_REQUEST.value(),
+                        e.getMessage()));
+    }
+
+    @ExceptionHandler(Exception.class)
+    public ResponseEntity<CustomErrorResponse> handleGeneralException(Exception e) {
+        log.error("Error interno del servidor: {}", e.getMessage(), e);
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                .body(new CustomErrorResponse(HttpStatus.INTERNAL_SERVER_ERROR.value(),
+                        "Error interno del servidor. Por favor, contacte al administrador."));
     }
 }
