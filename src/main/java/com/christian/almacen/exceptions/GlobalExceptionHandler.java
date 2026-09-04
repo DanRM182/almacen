@@ -73,6 +73,14 @@ public class GlobalExceptionHandler {
                 .body(new CustomErrorResponse(HttpStatus.NOT_FOUND.value(), e.getMessage()));
     }
 
+    @ExceptionHandler(BusquedaSinParametrosException.class)
+    public ResponseEntity<CustomErrorResponse> handleBusquedaSinParametrosException(BusquedaSinParametrosException e) {
+        log.error("No se puede realizar la búsqueda porque no hay atributos: {}", e.getMessage());
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                .body(new CustomErrorResponse(HttpStatus.BAD_REQUEST.value(),
+                e.getMessage()));
+    }
+
     @ExceptionHandler(RangoPrecioInvalidoException.class)
     public ResponseEntity<CustomErrorResponse> handleRangoPrecioInvalidoException(RangoPrecioInvalidoException e) {
         log.error("Error con los atributos de búsqueda de precio: {}", e.getMessage());
@@ -84,6 +92,14 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(VentaNoEncontradaONoActivaException.class)
     public ResponseEntity<CustomErrorResponse> handleVentaNoEncontradaONoActivaException(VentaNoEncontradaONoActivaException e) {
         log.error("Error, la venta no está activa o no existe: {}", e.getMessage());
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                .body(new CustomErrorResponse(HttpStatus.BAD_REQUEST.value(),
+                        e.getMessage()));
+    }
+
+    @ExceptionHandler(HttpMessageNotReadableException.class)
+    public ResponseEntity<CustomErrorResponse> handleInvalidJson(HttpMessageNotReadableException e) {
+        log.error("Error en el formato del JSON");
         return ResponseEntity.status(HttpStatus.BAD_REQUEST)
                 .body(new CustomErrorResponse(HttpStatus.BAD_REQUEST.value(),
                         e.getMessage()));

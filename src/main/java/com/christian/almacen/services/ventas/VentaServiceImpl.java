@@ -1,5 +1,6 @@
 package com.christian.almacen.services.ventas;
 
+import com.christian.almacen.dto.reporteVentasSucursal.ReporteVentasSucursalResponse;
 import com.christian.almacen.dto.ventas.DetalleVentaRequest;
 import com.christian.almacen.dto.ventas.VentaRequest;
 import com.christian.almacen.dto.ventas.VentaResponse;
@@ -71,7 +72,7 @@ public class VentaServiceImpl implements VentaService {
         Venta venta = ventaMapper.requestAEntidad(request, sucursal);
 
         venta = registrarDetalleVenta(venta, request);
-
+        log.info("Detalle Venta agregado: {}", venta.getSucursal().getNombre());
         ventaRepository.save(venta);
 
         log.info("Venta registrada correctamente...");
@@ -97,11 +98,19 @@ public class VentaServiceImpl implements VentaService {
         return ventaMapper.entidadAResponse(venta);
     }
 
+    @Transactional(readOnly = true)
+    @Override
+    public List<ReporteVentasSucursalResponse> generarReporteVentasGeneral() {
+        log.info("Generando reporte de ventas activas por sucursal");
+
+        return ventaRepository.generarReporteVentasPorSucursal(EstadoVenta.REGISTRADA);
+    }
+
     private void validarSucursalOException(Long id) {
         log.info("Validando que el id {} de sucursal exista", id);
 
         if(!sucursalRepository.existsById(id))
-            new RecursoNoEncontradoException("Sucursal con id: " + id + " no encontrada");
+            throw new RecursoNoEncontradoException("Sucursal con id: " + id + " no encontrada");
     }
 
     private Venta registrarDetalleVenta(Venta venta, VentaRequest request) {
